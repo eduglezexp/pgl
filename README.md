@@ -1,2 +1,1 @@
-# pgl
-PGL - Programación multimedia y dispositivos móviles
+# PGL - Programación multimedia y dispositivos móviles
