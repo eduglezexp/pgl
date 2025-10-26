@@ -1,20 +1,17 @@
 import { StyleSheet } from "react-native";
 
-export const styles = StyleSheet.create({
+export const square = StyleSheet.create({
     square: {
-        width: 40,
-        height: 40,
+        width: 100,
+        height: 100,
         borderWidth: 1,
         justifyContent: "center",
         alignItems: "center",
     },
 
     text: {
-        fontSize: 30,
+        fontSize: 80,
+        includeFontPadding: false,
         textAlign: "center",
-    },
-
-    row: {
-        flexDirection: "row",
     },
 })

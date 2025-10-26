@@ -1,14 +1,19 @@
-import { styles } from "@/styles/styles";
-import { Text, TouchableOpacity } from "react-native";
+import { square } from "@/styles/square";
+import { Text, TouchableOpacity, } from "react-native";
 
-type Value = {
-    value: string;
+type SquareProps = {
+    value: string
+    onSquarePress: () => void;
 }
 
-const Square = ({value}: Value) => {
+const Square = ({value, onSquarePress}: SquareProps) => {
+    
     return (
-        <TouchableOpacity style = {styles.square}>
-            <Text style = {styles.text}>{value}</Text>
+        <TouchableOpacity 
+            style = {square.square}
+            onPress={onSquarePress}
+        >
+            <Text style = {square.text}>{value}</Text>
         </TouchableOpacity>
     );
 };
