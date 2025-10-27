@@ -12,6 +12,9 @@ export const game = StyleSheet.create({
     },
 
     history: {
+        marginTop: 30,
         borderWidth: 1,
+        width: "77%",
+        maxHeight: 200,
     },
 })
