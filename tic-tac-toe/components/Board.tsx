@@ -1,10 +1,9 @@
 import Square from "@/components/Square";
-import { board } from "@/styles/board";
+import { board } from "@/styles/components/board";
 import { Text } from "@react-navigation/elements";
-import { useState } from "react";
 import { View } from "react-native";
 
-type BoardProps = {
+interface BoardProps {
     xIsNext: boolean,
     squares: string[],
     onPlay: (nextSquares: string[]) => void,

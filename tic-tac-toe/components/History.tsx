@@ -1,12 +1,27 @@
-import { View } from "react-native";
+import { ScrollView, TouchableOpacity, Text } from "react-native";
+import { history as styles } from "@/styles/components/history";
 
-const History = () => {
+interface HistoryProps {
+  history: string[][];
+  onJumpTo: (move: number) => void;
+}
 
-    return (
-        <View>
+export default function History({ history, onJumpTo }: HistoryProps) {
+  return (
+    <ScrollView>
+      {history.map((_, move) => {
+        const description = move > 0 ? `Go to move #${move}` : "Go to game start";
+        return (
+          <TouchableOpacity
+            key={move}
+            onPress={() => onJumpTo(move)}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>{description}</Text>
+          </TouchableOpacity>
+        );
+      })}
+    </ScrollView>
+  );
+}
 
-        </View>
-    );
-};
-
-export default History;

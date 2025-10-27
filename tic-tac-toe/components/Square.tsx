@@ -1,7 +1,7 @@
-import { square } from "@/styles/square";
+import { square } from "@/styles/components/square";
 import { Text, TouchableOpacity, } from "react-native";
 
-type SquareProps = {
+interface SquareProps {
     value: string
     onSquarePress: () => void;
 }
