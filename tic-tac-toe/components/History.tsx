@@ -6,7 +6,7 @@ interface HistoryProps {
   onJumpTo: (move: number) => void;
 }
 
-export default function History({ history, onJumpTo }: HistoryProps) {
+const History = ({ history, onJumpTo }: HistoryProps) => {
   return (
     <ScrollView>
       {history.map((_, move) => {
@@ -25,3 +25,4 @@ export default function History({ history, onJumpTo }: HistoryProps) {
   );
 }
 
+export default History;

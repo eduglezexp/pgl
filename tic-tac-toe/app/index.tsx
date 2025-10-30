@@ -1,7 +1,10 @@
 import Game from "@/components/Game";
+import { View } from "react-native";
 
 export default function Index() {
   return (
-    <Game></Game>
+    <View>
+      <Game></Game>
+    </View>
   );
 }

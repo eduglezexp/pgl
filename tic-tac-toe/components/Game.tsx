@@ -1,10 +1,10 @@
-import Board from "@/components/Board";
+import Board from "@/components/board/Board";
 import History from "@/components/History";
 import { game } from "@/styles/components/game";
 import { useState } from "react";
 import { View } from "react-native";
 
-export default function Game() {
+const Game = () => {
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
   const xIsNext = currentMove % 2 === 0;
@@ -29,3 +29,5 @@ export default function Game() {
     </View>
   );
 }
+
+export default Game;

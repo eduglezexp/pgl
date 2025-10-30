@@ -1,4 +1,5 @@
 import Square from "@/components/Square";
+import BoardView from "@/components/board/BoardView";
 import { board } from "@/styles/components/board";
 import { Text } from "@react-navigation/elements";
 import { View } from "react-native";
@@ -34,22 +35,11 @@ const Board = ({xIsNext, squares, onPlay}: BoardProps) => {
 
   return (
     <View>
-      <Text style={board.text}>{status}</Text>
-      <View style={board.row}>
-        <Square value={squares[0]} onSquarePress={() => handlePress(0)}></Square>
-        <Square value={squares[1]} onSquarePress={() => handlePress(1)}></Square>
-        <Square value={squares[2]} onSquarePress={() => handlePress(2)}></Square>
-      </View>
-      <View style={board.row}>
-        <Square value={squares[3]} onSquarePress={() => handlePress(3)}></Square>
-        <Square value={squares[4]} onSquarePress={() => handlePress(4)}></Square>
-        <Square value={squares[5]} onSquarePress={() => handlePress(5)}></Square>
-      </View>
-      <View style={board.row}>
-        <Square value={squares[6]} onSquarePress={() => handlePress(6)}></Square>
-        <Square value={squares[7]} onSquarePress={() => handlePress(7)}></Square>
-        <Square value={squares[8]} onSquarePress={() => handlePress(8)}></Square>
-      </View>
+      <BoardView 
+        status={status} 
+        squares={squares} 
+        handlePress={handlePress}>
+      </BoardView>
     </View>
   );
 }
