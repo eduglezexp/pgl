@@ -35,8 +35,9 @@ const Board = ({xIsNext, squares, onPlay}: BoardProps) => {
 
   return (
     <View>
+      <Text style={board.text}>{status}</Text>
       <BoardView 
-        status={status} 
+        squaresNumber={3}
         squares={squares} 
         handlePress={handlePress}>
       </BoardView>
