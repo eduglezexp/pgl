@@ -1,4 +1,5 @@
 import Board from "@/components/Board";
+import SizeSelector from "@/components/SizeSelector";
 import { game } from "@/styles/components/game";
 import { useState } from "react";
 import { Text, View } from "react-native";
@@ -20,47 +21,69 @@ const Game = () => {
     nextSquares[i] = xIsNext ? "X" : "O";
     setSquares(nextSquares);
     setXIsNext(!xIsNext);
-  }
+  };
 
-  let status = calculateStatus(squares, size, xIsNext);
-  
+  const winner = calculateWinner(squares, size);
+  const status = winner 
+    ? `Winner: ${winner}` 
+    : `Next player: ${xIsNext ? "X" : "O"}`;
+
   return (
     <View style={game.background}>
       <Text style={game.text}>{status}</Text>
+      
+      <SizeSelector 
+        currentSize={size} 
+        onSizeChange={handleChangeSize}
+        minSize={3}
+        maxSize={7}
+      />
+
       <View style={game.boardContainer}>
-        <Board size={size} squares={squares} onSquarePress={handlePress}></Board>
+        <Board size={size} squares={squares} onSquarePress={handlePress} />
       </View>
     </View>
   );
-}
+};
 
-const calculateWinner = (squares: string[], size: number) => {
+const calculateWinner = (squares: string[], size: number): string | null => {
+  const checkLine = (line: number[]): string | null => {
+    const first = squares[line[0]];
+    if (!first) return null;
+    
+    return line.every(index => squares[index] === first) ? first : null;
+  };
+
   const lines = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6]
+    ...generateRows(size),
+    ...generateColumns(size),
+    ...generateDiagonals(size)
   ];
-  for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
-    }
-  }
-  return null;
-}
 
-const calculateStatus = (squares: string[], size: number, xIsNext: boolean) => {
-  const winner = calculateWinner(squares, size);
-  if (winner) {
-    return "Winner: " + winner;
-  } else {
-    return "Next player: " + (xIsNext ? "X" : "O");
+  for (const line of lines) {
+    const winner = checkLine(line);
+    if (winner) return winner;
   }
-}
+
+  return null;
+};
+
+const generateRows = (size: number): number[][] => {
+  return Array.from({ length: size }, (_, row) =>
+    Array.from({ length: size }, (_, column) => row * size + column)
+  );
+};
+
+const generateColumns = (size: number): number[][] => {
+  return Array.from({ length: size }, (_, column) =>
+    Array.from({ length: size }, (_, row) => row * size + column)
+  );
+};
+
+const generateDiagonals = (size: number): number[][] => {
+  const main = Array.from({ length: size }, (_, i) => i * size + i);
+  const anti = Array.from({ length: size }, (_, i) => i * size + (size - 1 - i));
+  return [main, anti];
+};
 
 export default Game;
