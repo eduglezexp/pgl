@@ -33,7 +33,7 @@ const SizeSelector = ({
         style={sizeSelector.button}
         onPress={() => setShowMenu(!showMenu)}
       >
-        <Text style={sizeSelector.buttonText}>
+        <Text style= {sizeSelector.buttonText}>
           Size: {currentSize}x{currentSize}
         </Text>
       </TouchableOpacity>

@@ -1,8 +1,15 @@
 import Board from "@/components/Board";
 import SizeSelector from "@/components/SizeSelector";
+import RestartButton from "@/components/RestartButton";
 import { game } from "@/styles/components/game";
 import { useState } from "react";
 import { Text, View } from "react-native";
+
+type GameStatus = {
+  winner: string | null;
+  isDraw: boolean;
+  isGameOver: boolean;
+};
 
 const Game = () => {
   const [size, setSize] = useState(3);
@@ -16,17 +23,22 @@ const Game = () => {
   };
 
   const handlePress = (i: number) => {
-    if (squares[i] || calculateWinner(squares, size)) return;
+    const gameStatus = getGameStatus(squares, size);
+    if (squares[i] || gameStatus.isGameOver) return;
+    
     const nextSquares = squares.slice();
     nextSquares[i] = xIsNext ? "X" : "O";
     setSquares(nextSquares);
     setXIsNext(!xIsNext);
   };
 
-  const winner = calculateWinner(squares, size);
-  const status = winner 
-    ? `Winner: ${winner}` 
-    : `Next player: ${xIsNext ? "X" : "O"}`;
+  const handleRestart = () => {
+    setSquares(Array(size * size).fill(null));
+    setXIsNext(true);
+  };
+
+  const gameStatus = getGameStatus(squares, size);
+  const status = getStatusMessage(gameStatus, xIsNext);
 
   return (
     <View style={game.background}>
@@ -42,8 +54,31 @@ const Game = () => {
       <View style={game.boardContainer}>
         <Board size={size} squares={squares} onSquarePress={handlePress} />
       </View>
+
+      {gameStatus.isGameOver && <RestartButton onRestart={handleRestart} />}
     </View>
   );
+};
+
+const getGameStatus = (squares: string[], size: number): GameStatus => {
+  const winner = calculateWinner(squares, size);
+  const isBoardFull = squares.every(square => square !== null);
+  const isDraw = !winner && isBoardFull;
+  const isGameOver = winner !== null || isDraw;
+
+  return { winner, isDraw, isGameOver };
+};
+
+const getStatusMessage = (gameStatus: GameStatus, xIsNext: boolean): string => {
+  if (gameStatus.winner) {
+    return `Winner: ${gameStatus.winner}!`;
+  }
+  
+  if (gameStatus.isDraw) {
+    return "Draw!";
+  }
+  
+  return `Next player: ${xIsNext ? "X" : "O"}`;
 };
 
 const calculateWinner = (squares: string[], size: number): string | null => {
@@ -70,13 +105,13 @@ const calculateWinner = (squares: string[], size: number): string | null => {
 
 const generateRows = (size: number): number[][] => {
   return Array.from({ length: size }, (_, row) =>
-    Array.from({ length: size }, (_, column) => row * size + column)
+    Array.from({ length: size }, (_, col) => row * size + col)
   );
 };
 
 const generateColumns = (size: number): number[][] => {
-  return Array.from({ length: size }, (_, column) =>
-    Array.from({ length: size }, (_, row) => row * size + column)
+  return Array.from({ length: size }, (_, col) =>
+    Array.from({ length: size }, (_, row) => row * size + col)
   );
 };
 
