@@ -1,8 +1,9 @@
 import Board from "@/components/Board";
 import SizeSelector from "@/components/SizeSelector";
 import RestartButton from "@/components/RestartButton";
+import ScoreBoard from "@/components/ScoreBoard";
 import { game } from "@/styles/components/game";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Text, View } from "react-native";
 
 type GameStatus = {
@@ -15,6 +16,15 @@ const Game = () => {
   const [size, setSize] = useState(3);
   const [xIsNext, setXIsNext] = useState(true);
   const [squares, setSquares] = useState<string[]>(Array(size * size).fill(null));
+
+  const [xWins, setXWins] = useState(0);
+  const [oWins, setOWins] = useState(0);
+  const [draws, setDraws] = useState(0);
+  const [previousGameStatus, setPreviousGameStatus] = useState<GameStatus>({
+    winner: null,
+    isDraw: false,
+    isGameOver: false
+  });
 
   const handleChangeSize = (newSize: number) => {
     setSize(newSize);
@@ -37,8 +47,33 @@ const Game = () => {
     setXIsNext(true);
   };
 
+  const handleResetStats = () => {
+    const gameStatus = getGameStatus(squares, size);
+    if (!gameStatus.isGameOver && squares.some(square => square !== null)) {
+      return;
+    }
+    setXWins(0);
+    setOWins(0);
+    setDraws(0);
+  };
+
   const gameStatus = getGameStatus(squares, size);
   const status = getStatusMessage(gameStatus, xIsNext);
+  
+  useEffect(() => {
+    if (gameStatus.isGameOver && !previousGameStatus.isGameOver) {
+      if (gameStatus.winner === "X") {
+        setXWins(prev => prev + 1);
+      } else if (gameStatus.winner === "O") {
+        setOWins(prev => prev + 1);
+      } else if (gameStatus.isDraw) {
+        setDraws(prev => prev + 1);
+      }
+    }
+    setPreviousGameStatus(gameStatus);
+  }, [gameStatus.isGameOver, gameStatus.winner, gameStatus.isDraw]);
+
+  const canResetStats = gameStatus.isGameOver || squares.every(square => square === null);
 
   return (
     <View style={game.background}>
@@ -49,6 +84,14 @@ const Game = () => {
         onSizeChange={handleChangeSize}
         minSize={3}
         maxSize={7}
+      />
+
+      <ScoreBoard 
+        xWins={xWins}
+        oWins={oWins}
+        draws={draws}
+        onResetStats={handleResetStats}
+        canResetStats={canResetStats}
       />
 
       <View style={game.boardContainer}>
@@ -71,14 +114,14 @@ const getGameStatus = (squares: string[], size: number): GameStatus => {
 
 const getStatusMessage = (gameStatus: GameStatus, xIsNext: boolean): string => {
   if (gameStatus.winner) {
-    return `Winner: ${gameStatus.winner}!`;
+    return `¡Ganador: ${gameStatus.winner}!`;
   }
   
   if (gameStatus.isDraw) {
-    return "Draw!";
+    return "¡Empate!";
   }
   
-  return `Next player: ${xIsNext ? "X" : "O"}`;
+  return `Siguiente jugador: ${xIsNext ? "X" : "O"}`;
 };
 
 const calculateWinner = (squares: string[], size: number): string | null => {
