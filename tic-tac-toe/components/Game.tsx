@@ -1,31 +1,66 @@
 import Board from "@/components/Board";
-import History from "@/components/History";
 import { game } from "@/styles/components/game";
 import { useState } from "react";
-import { View } from "react-native";
+import { Text, View } from "react-native";
 
-export default function Game() {
-  const [history, setHistory] = useState([Array(9).fill(null)]);
-  const [currentMove, setCurrentMove] = useState(0);
-  const xIsNext = currentMove % 2 === 0;
-  const currentSquares = history[currentMove];
+const Game = () => {
+  const [size, setSize] = useState(3);
+  const [xIsNext, setXIsNext] = useState(true);
+  const [squares, setSquares] = useState<string[]>(Array(size * size).fill(null));
 
-  const handlePlay = (nextSquares: string[]) => {
-    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
-    setHistory(nextHistory);
-    setCurrentMove(nextHistory.length - 1);
+  const handleChangeSize = (newSize: number) => {
+    setSize(newSize);
+    setSquares(Array(newSize * newSize).fill(null));
+    setXIsNext(true);
   };
 
-  const jumpTo = (nextMove: number) => setCurrentMove(nextMove);
+  const handlePress = (i: number) => {
+    if (squares[i] || calculateWinner(squares, size)) return;
+    const nextSquares = squares.slice();
+    nextSquares[i] = xIsNext ? "X" : "O";
+    setSquares(nextSquares);
+    setXIsNext(!xIsNext);
+  }
 
+  let status = calculateStatus(squares, size, xIsNext);
+  
   return (
     <View style={game.background}>
+      <Text style={game.text}>{status}</Text>
       <View style={game.boardContainer}>
-        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay}></Board>
-      </View>
-      <View style={game.historyContainer}>
-        <History history={history} onJumpTo={jumpTo}></History>
+        <Board size={size} squares={squares} onSquarePress={handlePress}></Board>
       </View>
     </View>
   );
 }
+
+const calculateWinner = (squares: string[], size: number) => {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
+}
+
+const calculateStatus = (squares: string[], size: number, xIsNext: boolean) => {
+  const winner = calculateWinner(squares, size);
+  if (winner) {
+    return "Winner: " + winner;
+  } else {
+    return "Next player: " + (xIsNext ? "X" : "O");
+  }
+}
+
+export default Game;

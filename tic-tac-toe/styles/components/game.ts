@@ -28,4 +28,12 @@ export const game = StyleSheet.create({
     padding: 10,
     height: 250,
   },
+
+  text: {
+    fontSize: 24,
+    fontWeight: "600",
+    marginBottom: 20,
+    color: "#111827",
+    textAlign: "center",
+  },
 });
