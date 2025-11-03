@@ -12,7 +12,7 @@ interface ScoreBoardProps {
 const ScoreBoard = ({ xWins, oWins, draws, onResetStats, canResetStats }: ScoreBoardProps) => {
   return (
     <View style={scoreBoard.container}>
-      <Text style={scoreBoard.title}>📊 Scoreboard</Text>
+      <Text style={scoreBoard.title}>Scoreboard</Text>
       
       <View style={scoreBoard.statsContainer}>
         <View style={scoreBoard.statItem}>
@@ -46,12 +46,6 @@ const ScoreBoard = ({ xWins, oWins, draws, onResetStats, canResetStats }: ScoreB
           Reset statistics
         </Text>
       </TouchableOpacity>
-      
-      {!canResetStats && (
-        <Text style={scoreBoard.warningText}>
-          ⚠️ End the game to reset statistics
-        </Text>
-      )}
     </View>
   );
 };

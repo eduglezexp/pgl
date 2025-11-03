@@ -1,6 +1,6 @@
 import Square from "@/components/Square";
 import { board } from "@/styles/components/board";
-import { View } from "react-native";
+import { View, Dimensions } from "react-native";
 
 interface BoardProps {
   size: number;
@@ -8,18 +8,31 @@ interface BoardProps {
   onSquarePress(i: number): void;
 }
 
-const Board = ({size, squares, onSquarePress}: BoardProps) => {
+const Board = ({ size, squares, onSquarePress }: BoardProps) => {
+  const screenWidth = Dimensions.get("window").width;
+  const maxBoardSize = screenWidth * 0.8;
+  const squareSize = maxBoardSize / size;
 
   return (
-    <View>
+    <View
+      style={[
+        board.container,
+        {
+          width: maxBoardSize,
+          height: maxBoardSize,
+        },
+      ]}
+    >
       {Array.from({ length: size }).map((_, row) => (
-        <View style={board.row}>
-          {Array.from({ length: size }).map((_, column) => {
-            const index = row * size + column;
+        <View key={row} style={board.row}>
+          {Array.from({ length: size }).map((_, col) => {
+            const index = row * size + col;
             return (
               <Square
+                key={index}
                 value={squares[index]}
                 onSquarePress={() => onSquarePress(index)}
+                size={squareSize}
               />
             );
           })}
@@ -27,6 +40,7 @@ const Board = ({size, squares, onSquarePress}: BoardProps) => {
       ))}
     </View>
   );
-}
+};
 
 export default Board;
+

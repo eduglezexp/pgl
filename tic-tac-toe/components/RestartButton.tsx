@@ -7,7 +7,7 @@ interface RestartButtonProps {
 
 const RestartButton = ({ onRestart }: RestartButtonProps) => {
   return (
-    <TouchableOpacity 
+    <TouchableOpacity
       style={restartButton.button}
       onPress={onRestart}
     >
