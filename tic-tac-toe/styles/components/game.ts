@@ -4,26 +4,26 @@ export const game = StyleSheet.create({
   background: {
     flex: 1,
     backgroundColor: "#E5E7EB",
-    paddingVertical: 40,
-    paddingHorizontal: 30,
-    justifyContent: "space-between",
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    justifyContent: "space-evenly",
   },
 
   text: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "600",
-    marginBottom: 30,
+    marginBottom: 10,
     color: "#111827",
     textAlign: "center",
   },
 
   backButton: {
     alignSelf: "flex-start",
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
     backgroundColor: "#ffffff",
     borderRadius: 8,
-    marginBottom: 10,
+    marginBottom: 5,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -35,7 +35,7 @@ export const game = StyleSheet.create({
   },
 
   backButtonText: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "600",
     color: "#111827",
   },

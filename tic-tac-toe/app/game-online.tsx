@@ -1,12 +1,12 @@
-import Game from "@/components/Game";
+import GameOnline from "@/components/GameOnline";
 import { useRouter } from 'expo-router';
 
-export default function GameOnline() {
+export default function GameOnlineScreen() {
   const router = useRouter();
 
   const handleBackToHome = () => {
-    router.back();
+    router.push('/');
   };
 
-  return <Game onBackToHome={handleBackToHome} mode="online" />;
+  return <GameOnline onBackToHome={handleBackToHome} />;
 }
