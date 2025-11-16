@@ -85,7 +85,12 @@ const Game = () => {
 
       <Text style={game.text}>{status}</Text>
 
-      <Board size={size} squares={squares} onSquarePress={handlePress} />
+      <Board 
+        size={size} 
+        squares={squares} 
+        onSquarePress={handlePress}
+        gameStatus={gameStatus}
+      />
 
       <SizeSelector 
         currentSize={size} 
@@ -100,12 +105,17 @@ const Game = () => {
 };
 
 const getGameStatus = (squares: string[], size: number): GameStatus => {
-  const winner = calculateWinner(squares, size);
+  const { winner, winningLine } = calculateWinner(squares, size);
   const isBoardFull = squares.every(square => square !== null);
   const isDraw = !winner && isBoardFull;
   const isGameOver = winner !== null || isDraw;
 
-  return { winner, isDraw, isGameOver };
+  let longestLines;
+  if (isDraw) {
+    longestLines = findLongestLines(squares, size);
+  }
+
+  return { winner, isDraw, isGameOver, winningLine, longestLines };
 };
 
 const getStatusMessage = (gameStatus: GameStatus, xIsNext: boolean): string => {
@@ -120,7 +130,7 @@ const getStatusMessage = (gameStatus: GameStatus, xIsNext: boolean): string => {
   return `Next player: ${xIsNext ? "X" : "O"}`;
 };
 
-const calculateWinner = (squares: string[], size: number): string | null => {
+const calculateWinner = (squares: string[], size: number): { winner: string | null; winningLine?: number[] } => {
   const checkLine = (line: number[]): string | null => {
     const first = squares[line[0]];
     if (!first) return null;
@@ -136,10 +146,64 @@ const calculateWinner = (squares: string[], size: number): string | null => {
 
   for (const line of lines) {
     const winner = checkLine(line);
-    if (winner) return winner;
+    if (winner) return { winner, winningLine: line };
   }
 
-  return null;
+  return { winner: null };
+};
+
+const findLongestLines = (squares: string[], size: number): { X: number[]; O: number[] } => {
+  const lines = [
+    ...generateRows(size),
+    ...generateColumns(size),
+    ...generateDiagonals(size)
+  ];
+
+  let longestX: number[] = [];
+  let longestO: number[] = [];
+  let maxLengthX = 0;
+  let maxLengthO = 0;
+
+  for (const line of lines) {
+
+    let currentSequenceX: number[] = [];
+    for (const index of line) {
+      if (squares[index] === 'X') {
+        currentSequenceX.push(index);
+      } else {
+        if (currentSequenceX.length > maxLengthX) {
+          maxLengthX = currentSequenceX.length;
+          longestX = [...currentSequenceX];
+        }
+        currentSequenceX = [];
+      }
+    }
+
+    if (currentSequenceX.length > maxLengthX) {
+      maxLengthX = currentSequenceX.length;
+      longestX = [...currentSequenceX];
+    }
+
+    let currentSequenceO: number[] = [];
+    for (const index of line) {
+      if (squares[index] === 'O') {
+        currentSequenceO.push(index);
+      } else {
+        if (currentSequenceO.length > maxLengthO) {
+          maxLengthO = currentSequenceO.length;
+          longestO = [...currentSequenceO];
+        }
+        currentSequenceO = [];
+      }
+    }
+
+    if (currentSequenceO.length > maxLengthO) {
+      maxLengthO = currentSequenceO.length;
+      longestO = [...currentSequenceO];
+    }
+  }
+
+  return { X: longestX, O: longestO };
 };
 
 const generateRows = (size: number): number[][] => {

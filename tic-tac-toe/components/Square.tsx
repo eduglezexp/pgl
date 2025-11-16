@@ -5,13 +5,29 @@ interface SquareProps {
   value: string | null;
   onSquarePress(): void;
   size: number;
+  highlightType?: 'winning' | 'drawX' | 'drawO' | null;
 }
 
-const Square = ({ value, onSquarePress, size }: SquareProps) => {
+const Square = ({ value, onSquarePress, size, highlightType }: SquareProps) => {
+  const getButtonStyle = () => {
+    switch (highlightType) {
+      case 'winning':
+        return square.buttonWinning;
+      case 'drawX':
+        return square.buttonDrawX;
+      case 'drawO':
+        return square.buttonDrawO;
+      default:
+        return square.button;
+    }
+  };
+
+  const textStyle = highlightType ? square.textHighlighted : square.text;
+
   return (
     <TouchableOpacity
       style={[
-        square.button,
+        getButtonStyle(),
         {
           width: size,
           height: size,
@@ -20,7 +36,7 @@ const Square = ({ value, onSquarePress, size }: SquareProps) => {
       onPress={onSquarePress}
       activeOpacity={0.8}
     >
-      <Text style={square.text}>{value}</Text>
+      <Text style={textStyle}>{value}</Text>
     </TouchableOpacity>
   );
 };
