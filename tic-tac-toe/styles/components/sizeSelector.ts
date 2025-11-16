@@ -1,14 +1,18 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 
 export const sizeSelector = StyleSheet.create({
   container: {
     position: "relative",
     zIndex: 1000,
+    marginVertical: 5,
+    width: "100%",
+    maxWidth: Platform.OS === 'web' ? 400 : undefined,
+    paddingTop: 20,
   },
   button: {
     backgroundColor: "#4CAF50",
-    paddingHorizontal: 30,
-    paddingVertical: 15,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
     borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -17,17 +21,17 @@ export const sizeSelector = StyleSheet.create({
     elevation: 5,
     width: "100%",
     alignItems: "center",
-    bottom: -10,
+    cursor: Platform.OS === 'web' ? 'pointer' : undefined,
   },
   buttonText: {
     color: "white",
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
   },
   menu: {
     position: "absolute",
-    bottom: 60,
+    bottom: 55,
     backgroundColor: "white",
     borderRadius: 8,
     shadowColor: "#000",
@@ -38,16 +42,17 @@ export const sizeSelector = StyleSheet.create({
     width: "100%",
   },
   menuItem: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: "#e0e0e0",
+    cursor: Platform.OS === 'web' ? 'pointer' : undefined,
   },
   menuItemActive: {
     backgroundColor: "#E8F5E9",
   },
   menuText: {
-    fontSize: 16,
+    fontSize: 14,
     color: "#333",
     textAlign: "center",
   },
@@ -56,4 +61,3 @@ export const sizeSelector = StyleSheet.create({
     fontWeight: "bold",
   },
 });
-

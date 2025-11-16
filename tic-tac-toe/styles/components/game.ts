@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 
 export const game = StyleSheet.create({
   background: {
@@ -6,13 +6,19 @@ export const game = StyleSheet.create({
     backgroundColor: "#E5E7EB",
     paddingVertical: 20,
     paddingHorizontal: 20,
-    justifyContent: "space-evenly",
+    justifyContent: "center",
+    alignItems: "center",
+    maxWidth: Platform.OS === 'web' ? 600 : undefined,
+    alignSelf: Platform.OS === 'web' ? 'center' : undefined,
+    width: Platform.OS === 'web' ? '100%' : undefined,
+    gap: 15,
   },
 
   text: {
     fontSize: 20,
     fontWeight: "600",
-    marginBottom: 10,
+    marginBottom: 20,
+    marginTop: 5,
     color: "#111827",
     textAlign: "center",
   },
@@ -23,7 +29,7 @@ export const game = StyleSheet.create({
     paddingHorizontal: 12,
     backgroundColor: "#ffffff",
     borderRadius: 8,
-    marginBottom: 5,
+    marginBottom: 0,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,

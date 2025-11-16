@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 
 export const square = StyleSheet.create({
   button: {
@@ -6,45 +6,51 @@ export const square = StyleSheet.create({
     alignItems: "center",
     borderWidth: 2,
     borderColor: "#ccc",
-    margin: 2,
+    margin: 1,
     backgroundColor: "#f9fafb",
-    borderRadius: 8,
+    borderRadius: 6,
+    cursor: Platform.OS === 'web' ? 'pointer' : undefined,
   },
   buttonWinning: {
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 2,
     borderColor: "#ccc",
-    margin: 2,
+    margin: 1,
     backgroundColor: "#10b981",
-    borderRadius: 8,
+    borderRadius: 6,
+    cursor: Platform.OS === 'web' ? 'pointer' : undefined,
   },
   buttonDrawX: {
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 2,
     borderColor: "#ccc",
-    margin: 2,
+    margin: 1,
     backgroundColor: "#3b82f6",
-    borderRadius: 8,
+    borderRadius: 6,
+    cursor: Platform.OS === 'web' ? 'pointer' : undefined,
   },
   buttonDrawO: {
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 2,
     borderColor: "#ccc",
-    margin: 2,
+    margin: 1,
     backgroundColor: "#ef4444",
-    borderRadius: 8,
+    borderRadius: 6,
+    cursor: Platform.OS === 'web' ? 'pointer' : undefined,
   },
   text: {
-    fontSize: 28,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#111827",
+    userSelect: Platform.OS === 'web' ? 'none' : undefined,
   },
   textHighlighted: {
-    fontSize: 28,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#ffffff",
+    userSelect: Platform.OS === 'web' ? 'none' : undefined,
   },
 });

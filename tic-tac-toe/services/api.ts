@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://192.168.1.128:5000';
+const API_BASE_URL = 'http://localhost:5000';
 
 export interface Device {
   device_id: string;
@@ -55,7 +55,7 @@ class ApiService {
     });
 
     if (!response.ok) {
-      throw new Error('Error al registrar dispositivo');
+      throw new Error('Error registering device');
     }
 
     return await response.json();
@@ -65,7 +65,7 @@ class ApiService {
     const response = await fetch(`${this.baseUrl}/devices/${deviceId}/info`);
 
     if (!response.ok) {
-      throw new Error('Error al obtener información del dispositivo');
+      throw new Error('Error fetching device information');
     }
 
     return await response.json();
@@ -81,7 +81,7 @@ class ApiService {
     });
 
     if (!response.ok) {
-      throw new Error('Error al crear partida');
+      throw new Error('Error creating match');
     }
 
     return await response.json();
@@ -93,7 +93,7 @@ class ApiService {
     );
 
     if (!response.ok) {
-      throw new Error('Error al obtener estado de espera');
+      throw new Error('Error fetching waiting status');
     }
 
     return await response.json();
@@ -115,7 +115,7 @@ class ApiService {
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || 'Error al realizar movimiento');
+      throw new Error(errorData.message || 'Error making move');
     }
 
     return await response.json();
@@ -125,7 +125,7 @@ class ApiService {
     const response = await fetch(`${this.baseUrl}/matches/${matchId}`);
 
     if (!response.ok) {
-      throw new Error('Error al obtener estado de la partida');
+      throw new Error('Error fetching match state');
     }
 
     return await response.json();

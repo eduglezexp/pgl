@@ -1,6 +1,6 @@
 import Square from "@/components/Square";
 import { board } from "@/styles/components/board";
-import { View, Dimensions } from "react-native";
+import { View, Dimensions, Platform } from "react-native";
 import { GameStatus } from "@/types/game";
 
 interface BoardProps {
@@ -12,7 +12,12 @@ interface BoardProps {
 
 const Board = ({ size, squares, onSquarePress, gameStatus }: BoardProps) => {
   const screenWidth = Dimensions.get("window").width;
-  const maxBoardSize = screenWidth * 0.8;
+  
+  // Ajustar el tamaño máximo del tablero según la plataforma
+  const maxBoardSize = Platform.OS === 'web' 
+    ? Math.min(screenWidth * 0.5, 400)  // En web: 50% del ancho o máximo 400px
+    : screenWidth * 0.8;                 // En móvil: 80% del ancho
+    
   const squareSize = maxBoardSize / size;
 
   const getHighlightType = (index: number): 'winning' | 'drawX' | 'drawO' | null => {

@@ -4,9 +4,9 @@ export const board = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: 10,
-    paddingBottom: 30,
-    left: 10,
+    alignSelf: "center",
+    paddingTop: 5,
+    paddingBottom: 5,
   },
   row: {
     flexDirection: "row",

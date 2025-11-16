@@ -1,93 +1,184 @@
-import { StyleSheet } from "react-native";
+// @/styles/components/gameOnline.ts
+import { StyleSheet, Platform } from "react-native";
 
 export const gameOnline = StyleSheet.create({
+  // Contenedor principal
   container: {
     flex: 1,
-    backgroundColor: '#1a1a2e',
+    backgroundColor: '#E5E7EB',
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    maxWidth: Platform.OS === 'web' ? 600 : undefined,
+    alignSelf: Platform.OS === 'web' ? 'center' : undefined,
+    width: Platform.OS === 'web' ? '100%' : undefined,
+    gap: 15,
+  },
+  
+  // Botón de retroceso
+  backButton: {
+    alignSelf: "flex-start",
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    backgroundColor: "#ffffff",
+    borderRadius: 8,
+    marginBottom: 0,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+
+  backButtonText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#111827",
+  },
+  
+  // Contenedor de estadísticas
+  statsContainer: {
+    width: '100%',
+    maxWidth: Platform.OS === 'web' ? 500 : undefined,
+    padding: 12,
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    marginVertical: 5,
+  },
+  
+  statsTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#111827',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+
+  // Fila horizontal de estadísticas
+  statsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+
+  // Item individual de estadística
+  statItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+
+  statValue: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#2196F3',
+    marginBottom: 2,
+  },
+
+  statLabel: {
+    fontSize: 11,
+    color: '#6B7280',
+    fontWeight: '500',
+  },
+
+  // Botón de reset
+  resetButton: {
+    alignItems: 'center',
+    paddingVertical: 6,
+  },
+
+  resetDeviceText: {
+    color: '#EF4444',
+    fontSize: 11,
+    fontWeight: '600',
+  },
+  
+  // Títulos
+  title: {
+    fontSize: 24,
+    color: '#111827',
+    marginBottom: 10,
+    marginTop: 10,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+
+  statusText: {
+    fontSize: 20,
+    color: '#111827',
+    marginBottom: 10,
+    marginTop: 10,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  
+  // Botones
+  button: {
+    backgroundColor: '#2196F3',
+    padding: 12,
+    borderRadius: 10,
+    marginTop: 5,
+    width: '100%',
+    maxWidth: Platform.OS === 'web' ? 400 : undefined,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    cursor: Platform.OS === 'web' ? 'pointer' : undefined,
+  },
+
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  
+  // Estados de espera
+  waitingContainer: {
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
   },
-  backButton: {
-    position: 'absolute',
-    top: 50,
-    left: 20,
-    padding: 10,
-  },
-  backButtonText: {
-    color: '#3182ce',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    marginBottom: 20,
-    padding: 15,
-    backgroundColor: '#16213e',
-    borderRadius: 10,
-  },
-  statsText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  resetDeviceText: {
-    color: '#e53e3e',
-    fontSize: 14,
-    textDecorationLine: 'underline',
-  },
-  title: {
-    fontSize: 24,
-    color: '#fff',
-    marginBottom: 20,
-    fontWeight: 'bold',
-  },
-  statusText: {
-    fontSize: 20,
-    color: '#fff',
-    marginBottom: 20,
-    fontWeight: 'bold',
-  },
-  button: {
-    backgroundColor: '#3182ce',
-    padding: 15,
-    borderRadius: 10,
-    marginTop: 20,
-    minWidth: 200,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  waitingContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+
   waitingText: {
     fontSize: 20,
-    color: '#fff',
+    color: '#111827',
     marginTop: 20,
+    fontWeight: '600',
   },
+
   waitingSubtext: {
     fontSize: 16,
-    color: '#aaa',
+    color: '#6B7280',
     marginTop: 10,
   },
+  
+  // Estados de carga y error
   loadingText: {
-    color: '#fff',
+    color: '#111827',
     fontSize: 18,
     marginTop: 20,
+    fontWeight: '600',
   },
+
   errorText: {
     color: '#e53e3e',
     fontSize: 18,
     marginBottom: 20,
     textAlign: 'center',
+    fontWeight: '600',
   },
+
   errorTextSmall: {
     color: '#e53e3e',
     fontSize: 14,

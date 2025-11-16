@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 
 export const homeScreen = StyleSheet.create({
   container: {
@@ -10,11 +10,11 @@ export const homeScreen = StyleSheet.create({
   },
   content: {
     width: "100%",
-    maxWidth: 500,
+    maxWidth: Platform.OS === 'web' ? 500 : 500,
     alignItems: "center",
   },
   title: {
-    fontSize: 48,
+    fontSize: Platform.OS === 'web' ? 56 : 48,
     fontWeight: "bold",
     color: "#111827",
     marginBottom: 10,
@@ -43,6 +43,7 @@ export const homeScreen = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 5,
+    cursor: Platform.OS === 'web' ? 'pointer' : undefined,
   },
   buttonOnline: {
     backgroundColor: "#ffffff",
@@ -57,6 +58,7 @@ export const homeScreen = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 5,
+    cursor: Platform.OS === 'web' ? 'pointer' : undefined,
   },
   buttonIcon: {
     fontSize: 48,

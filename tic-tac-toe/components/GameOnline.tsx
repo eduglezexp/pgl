@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Alert, ActivityIndicator, } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, ActivityIndicator, Platform } from 'react-native';
 import { apiService, MatchState } from '@/services/api';
 import { deviceStorage } from '@/services/deviceStorage';
 import Board from '@/components/Board';
 import SizeSelector from '@/components/SizeSelector';
 import { GameStatus } from '@/types/game';
 import { gameOnline } from '@/styles/components/gameOnline';
+import { getGameStatus as getGameStatusUtil } from '@/utils/gameUtils';
 
 interface GameOnlineProps {
   onBackToHome?: () => void;
@@ -24,12 +25,10 @@ const GameOnline: React.FC<GameOnlineProps> = ({ onBackToHome }) => {
   const [wins, setWins] = useState(0);
   const [losses, setLosses] = useState(0);
 
-  // Initialize device
   useEffect(() => {
     initializeDevice();
   }, []);
 
-  // Polling to update match state
   useEffect(() => {
     if (!matchId || !deviceId) return;
 
@@ -39,7 +38,6 @@ const GameOnline: React.FC<GameOnlineProps> = ({ onBackToHome }) => {
         setMatchState(state);
         setIsMyTurn(state.turn === deviceId);
         
-        // If there's a winner, update statistics
         if (state.winner && matchState?.winner !== state.winner) {
           await loadDeviceStats();
         }
@@ -51,7 +49,6 @@ const GameOnline: React.FC<GameOnlineProps> = ({ onBackToHome }) => {
     return () => clearInterval(interval);
   }, [matchId, deviceId, matchState?.winner]);
 
-  // Polling to check if opponent was found
   useEffect(() => {
     if (!isWaiting || !deviceId) return;
 
@@ -80,7 +77,6 @@ const GameOnline: React.FC<GameOnlineProps> = ({ onBackToHome }) => {
       setLoading(true);
       setError(null);
 
-      // Check connection
       const isConnected = await apiService.checkConnection();
       if (!isConnected) {
         setError('Cannot connect to server. Check your connection.');
@@ -143,7 +139,11 @@ const GameOnline: React.FC<GameOnlineProps> = ({ onBackToHome }) => {
     if (!matchId || !matchState || !deviceId) return;
 
     if (!isMyTurn) {
-      Alert.alert('Not your turn', 'Wait for your opponent to make their move.');
+      if (Platform.OS === 'web') {
+        alert('Not your turn! Wait for your opponent to make their move.');
+      } else {
+        Alert.alert('Not your turn', 'Wait for your opponent to make their move.');
+      }
       return;
     }
 
@@ -156,7 +156,6 @@ const GameOnline: React.FC<GameOnlineProps> = ({ onBackToHome }) => {
       setError(null);
       const response = await apiService.makeMove(matchId, deviceId, x, y);
       
-      // Update state immediately
       setMatchState({
         ...matchState,
         board: response.board,
@@ -171,31 +170,47 @@ const GameOnline: React.FC<GameOnlineProps> = ({ onBackToHome }) => {
       }
     } catch (err: any) {
       setError(err.message);
-      Alert.alert('Error', err.message);
+      if (Platform.OS === 'web') {
+        alert('Error: ' + err.message);
+      } else {
+        Alert.alert('Error', err.message);
+      }
     }
   };
 
   const handleResetDevice = () => {
-    Alert.alert(
-      'Reset Device',
-      'Are you sure? This will delete your device ID and all your global statistics.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Confirm',
-          style: 'destructive',
-          onPress: async () => {
-            await deviceStorage.removeDeviceId();
-            setDeviceId(null);
-            setMatchId(null);
-            setMatchState(null);
-            setWins(0);
-            setLosses(0);
-            await initializeDevice();
+    if (Platform.OS === 'web') {
+      if (confirm('Are you sure? This will delete your device ID and all your statistics.')) {
+        deviceStorage.removeDeviceId();
+        setDeviceId(null);
+        setMatchId(null);
+        setMatchState(null);
+        setWins(0);
+        setLosses(0);
+        initializeDevice();
+      }
+    } else {
+      Alert.alert(
+        'Reset Device',
+        'Are you sure? This will delete your device ID and all your statistics.',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Confirm',
+            style: 'destructive',
+            onPress: async () => {
+              await deviceStorage.removeDeviceId();
+              setDeviceId(null);
+              setMatchId(null);
+              setMatchState(null);
+              setWins(0);
+              setLosses(0);
+              await initializeDevice();
+            },
           },
-        },
-      ]
-    );
+        ]
+      );
+    }
   };
 
   const handleNewMatch = () => {
@@ -211,11 +226,8 @@ const GameOnline: React.FC<GameOnlineProps> = ({ onBackToHome }) => {
       return { winner: null, isDraw: false, isGameOver: false };
     }
 
-    const winner = matchState.winner;
-    const isDraw = winner === 'Draw';
-    const isGameOver = winner !== null;
-
-    return { winner: isDraw ? null : winner, isDraw, isGameOver };
+    const squares = convertBoardToArray();
+    return getGameStatusUtil(squares, matchState.size);
   };
 
   const getStatusMessage = (): string => {
@@ -246,10 +258,13 @@ const GameOnline: React.FC<GameOnlineProps> = ({ onBackToHome }) => {
     return flatBoard;
   };
 
+  const totalGames = wins + losses;
+  const winRate = totalGames > 0 ? ((wins / totalGames) * 100).toFixed(1) : '0.0';
+
   if (loading) {
     return (
       <View style={gameOnline.container}>
-        <ActivityIndicator size="large" color="#3182ce" />
+        <ActivityIndicator size="large" color="#2196F3" />
         <Text style={gameOnline.loadingText}>Connecting...</Text>
       </View>
     );
@@ -280,10 +295,31 @@ const GameOnline: React.FC<GameOnlineProps> = ({ onBackToHome }) => {
       )}
 
       <View style={gameOnline.statsContainer}>
-        <Text style={gameOnline.statsText}>Wins: {wins}</Text>
-        <Text style={gameOnline.statsText}>Losses: {losses}</Text>
-        <TouchableOpacity onPress={handleResetDevice}>
-          <Text style={gameOnline.resetDeviceText}>Reset ID</Text>
+        <Text style={gameOnline.statsTitle}>Scoreboard</Text>
+        
+        <View style={gameOnline.statsRow}>
+          <View style={gameOnline.statItem}>
+            <Text style={gameOnline.statValue}>{wins}</Text>
+            <Text style={gameOnline.statLabel}>Wins</Text>
+          </View>
+          
+          <View style={gameOnline.statItem}>
+            <Text style={gameOnline.statValue}>{losses}</Text>
+            <Text style={gameOnline.statLabel}>Losses</Text>
+          </View>
+          
+          <View style={gameOnline.statItem}>
+            <Text style={gameOnline.statValue}>{winRate}%</Text>
+            <Text style={gameOnline.statLabel}>Rate</Text>
+          </View>
+        </View>
+
+        <TouchableOpacity 
+          onPress={handleResetDevice} 
+          style={gameOnline.resetButton}
+          activeOpacity={0.7}
+        >
+          <Text style={gameOnline.resetDeviceText}>Reset Device</Text>
         </TouchableOpacity>
       </View>
 
@@ -306,7 +342,7 @@ const GameOnline: React.FC<GameOnlineProps> = ({ onBackToHome }) => {
 
       {isWaiting && (
         <View style={gameOnline.waitingContainer}>
-          <ActivityIndicator size="large" color="#3182ce" />
+          <ActivityIndicator size="large" color="#2196F3" />
           <Text style={gameOnline.waitingText}>Waiting for opponent...</Text>
           <Text style={gameOnline.waitingSubtext}>Board {size}x{size}</Text>
         </View>
