@@ -4,10 +4,15 @@ import RestartButton from "@/components/RestartButton";
 import ScoreBoard from "@/components/ScoreBoard";
 import { game } from "@/styles/components/game";
 import { useState, useEffect } from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { GameStatus } from "@/types/game";
 
-const Game = () => {
+interface GameProps {
+  onBackToHome?: () => void;
+  mode?: 'offline' | 'online';
+}
+
+const Game = ({ onBackToHome, mode = 'offline' }: GameProps) => {
   const [size, setSize] = useState(3);
   const [xIsNext, setXIsNext] = useState(true);
   const [squares, setSquares] = useState<string[]>(Array(size * size).fill(null));
@@ -75,6 +80,16 @@ const Game = () => {
 
   return (
     <View style={game.background}>
+      {onBackToHome && (
+        <TouchableOpacity 
+          onPress={onBackToHome}
+          style={game.backButton}
+          activeOpacity={0.7}
+        >
+          <Text style={game.backButtonText}>← Back</Text>
+        </TouchableOpacity>
+      )}
+      
       <ScoreBoard 
         xWins={xWins}
         oWins={oWins}
