@@ -1,12 +1,10 @@
 import { useRouter } from "expo-router";
 import React, { useContext, useState } from "react";
-import { Button, Text, TextInput, View, Alert, Modal } from "react-native";
+import { Button, Text, TextInput, View, Alert } from "react-native";
 import { AuthContext } from "../context/AuthContext";
 
 export default function Login() {
   const { login, token } = useContext(AuthContext);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [newAmount, setNewAmount] = useContext<String | null>();
   const [expenses, setExpenses] = useState([
     {
       id: "e.id1",
@@ -51,25 +49,32 @@ export default function Login() {
     }
   };
 
+  const handleChange = (index: number, field: string, value: string) => {
+    console.log(index)
+    console.log(field)
+    console.log(value)
+  };
+
   return (
     <View style={{ flex: 1, justifyContent: "center", padding: 20 }}>
       <Text>Mi grupo</Text>
-      {expenses.map((e) => (
+      {expenses.map((e, index) => (
         <View key={e.id}>
-          <Text>{`${e.amount} - ${e.desc}`}</Text>
-          <Button title="Actualizar" onPress={() => setModalVisible(true)} />
+          <TextInput 
+            keyboardType="number-pad" 
+            onChangeText={(text) => {handleChange(index, "amount", text)}}
+          >
+            {e.amount}
+          </TextInput>
+          <TextInput
+            onChangeText={(text) => {handleChange(index, "desc", text)}}
+          >
+            {e.desc}
+          </TextInput>
+          <Button title="Actualizar" onPress={() => handleUpdate(e.id)} />
           <Button title="Borrar" onPress={() => handleDelete(e.id)} />
         </View>
       ))}
-
-      <Modal
-        visible = {modalVisible}
-      >
-        <Text>Editando expenses</Text>
-        <TextInput value={} onChangeText={(text) => {}}></TextInput>
-        <TextInput value={} onChangeText={(text) => {}}></TextInput>
-        <Button title="Cancelar" onPress={() => setModalVisible(false)}></Button>
-      </Modal>
 
       <Button title="Volver a mis grupos" onPress={() => router.replace("/")} />
     </View>
