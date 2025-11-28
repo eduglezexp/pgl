@@ -10,6 +10,7 @@ type AuthContextType = {
   loading: boolean;
   login: (username: string, password: string) => Promise<any>;
   register: (username: string, password: string) => Promise<any>;
+  unregister: (username: string, password: string) => Promise<any>;
   logout: () => Promise<void>;
 };
 
@@ -18,6 +19,7 @@ export const AuthContext = createContext<AuthContextType>({
   loading: true,
   login: async () => ({}),
   register: async () => ({}),
+  unregister: async () => ({}),
   logout: async () => {},
 });
 
@@ -70,8 +72,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setToken(null);
   };
 
+  const unregister = async (username: string, password:string) => {
+    try {
+      const res = await fetch(`${API_URL}/auth/unregister`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+      await SecureStore.deleteItemAsync(TOKEN_KEY);
+      setToken(null);
+      return await res.json();
+    } catch (err) {
+      return { ok: false, msg: "Network error" };
+    }
+  }
+
   const value = useMemo(
-    () => ({ token, loading, login, register, logout }),
+    () => ({ token, loading, login, register, logout, unregister }),
     [token, loading],
   );
 
